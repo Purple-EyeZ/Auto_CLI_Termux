@@ -30,7 +30,7 @@ Once all this is done, the script asks you what action you want to perform:
  *.apk files should be placed in the folder corresponding to the application in "/Download/Auto_CLI_Termux/APK/AppName" ==(PLACE ONLY ONE .APK IN EACH FOLDER)==*
 
 - U) Patch an application that isn't in the list above, with default patches and default options (The app must of course be supported by ReVanced patches, you can see which apps are supported [here](https://revanced.app/patches))
-- C) Clean CLI files and .apk folders and close script
+- C) Clean CLI files and .apk folders and close script (You'll keep the /Patched_Apps folder)
 - E) Simply close the script
 
 Once the application has been patched, you can find it in the “/Download/Auto_CLI_Termux/Patched_Apps/*Patched_AppName*” folder. (Open the patched .apk and install it)
