@@ -12,7 +12,7 @@ To use the **manual** version (You must download and place the .apk files manual
     ```
     
     *Note: you may need to install “curl” first, using the following command:*
-    `sudo apt update && sudo apt install -y curl`
+    `pkg update && pkg install -y curl`
 ---
 ### Usage
 
