@@ -35,6 +35,8 @@ Once all this is done, the script asks you what action you want to perform:
 
 Once the application has been patched, you can find it in the “/Download/Auto_CLI_Termux/Patched_Apps/*Patched_AppName*” folder. (Open the patched .apk and install it)
 
+(Also, the script assumes that you have put the apk with the correct version in the /APK/*AppName* folders, so your apk will be renamed with this version number, regardless of its actual version.)
+
 ---
 ### Direct use of CLI
 
