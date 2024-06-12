@@ -1,6 +1,6 @@
 # Auto_CLI_Termux
 
-### Get started
+### 🚀 Get started
 
 To use the **manual** version (You must download and place the .apk files manually in the corresponding folder):
 
@@ -14,7 +14,7 @@ To use the **manual** version (You must download and place the .apk files manual
     >ℹ️ *Note: you may need to install “curl” first, using the following command:*
     `pkg update && pkg install -y curl`
 ---
-### Usage
+### 🛠️ Usage
 
 Once launched, the script will download and install all the prerequisites for using CLI, the CLI files and required folders will be created in “/Internal Storage/Download/Auto_CLI_Termux”.
 
@@ -38,7 +38,7 @@ Once the application has been patched, you can find it in the “/Download/Auto_
 > ⚠️ (Also, the script assumes that you have put the apk with the correct version in the /APK/*AppName* folders, so your apk will be renamed with this version number, regardless of its actual version.)
 
 ---
-### Direct use of CLI
+### 👨‍💻 Direct use of CLI
 
 You can also just use this script to install the CLI and its prerequisites quickly and use the CLI manually:
 
