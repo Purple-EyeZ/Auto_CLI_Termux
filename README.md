@@ -11,7 +11,7 @@ To use the **manual** version (You must download and place the .apk files manual
     bash <(curl -s https://raw.githubusercontent.com/Purple-EyeZ/Auto_CLI_Termux/main/Manual/Auto_CLI_Termux_MANUAL.sh)
     ```
     
-    *Note: you may need to install “curl” first, using the following command:*
+    >ℹ️ *Note: you may need to install “curl” first, using the following command:*
     `pkg update && pkg install -y curl`
 ---
 ### Usage
@@ -27,7 +27,7 @@ Once all this is done, the script asks you what action you want to perform:
  4. Patch [TikTok](https://www.apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly/tik-tok-including-musical-ly-32-5-3-release/tiktok-32-5-3-4-android-apk-download/)
  5. Patch [Reddit](https://www.apkmirror.com/apk/redditinc/reddit/reddit-2024-17-0-release/reddit-2024-17-0-2-android-apk-download/)
  
- *.apk files should be placed in the folder corresponding to the application in "/Download/Auto_CLI_Termux/APK/AppName" ==(PLACE ONLY ONE .APK IN EACH FOLDER)==*
+ >*⚠️ .apk files should be placed in the folder corresponding to the application in "/Download/Auto_CLI_Termux/APK/AppName" ==(PLACE ONLY ONE .APK IN EACH FOLDER)==*
 
 - U) Patch an application that isn't in the list above, with default patches and default options (The app must of course be supported by ReVanced patches, you can see which apps are supported [here](https://revanced.app/patches))
 - C) Clean CLI files and .apk folders and close script (You'll keep the /Patched_Apps folder)
@@ -35,7 +35,7 @@ Once all this is done, the script asks you what action you want to perform:
 
 Once the application has been patched, you can find it in the “/Download/Auto_CLI_Termux/Patched_Apps/*Patched_AppName*” folder. (Open the patched .apk and install it)
 
-(Also, the script assumes that you have put the apk with the correct version in the /APK/*AppName* folders, so your apk will be renamed with this version number, regardless of its actual version.)
+> ⚠️ (Also, the script assumes that you have put the apk with the correct version in the /APK/*AppName* folders, so your apk will be renamed with this version number, regardless of its actual version.)
 
 ---
 ### Direct use of CLI
