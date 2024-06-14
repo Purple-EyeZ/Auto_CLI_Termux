@@ -9,32 +9,26 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-center_text() {
-    local text="$1"
-    local width=$(tput cols)
-    local text_length=${#text}
-    local padding=$(( (width - text_length) / 2 ))
-    printf "%*s%s\n" $padding "" "$text"
-}
-
 clear
 echo -e "${GREEN}"
-center_text "===================================="
-center_text ">>  Auto CLI Termux  <<"
-center_text "===================================="
+echo "           ====================================="
+echo "                  >>  Auto CLI Termux  <<"
+echo "           ====================================="
 echo -e "${NC}"
-center_text "The script will download and install if necessary:"
-center_text "- Open JDK 17"
-center_text "- The files required for the CLI"
-center_text "- Dependencies needed to run the script"
+echo "     The script will download and install if necessary:"
+echo "                      - Open JDK 17"
+echo "             - The files required for the CLI"
+echo "          - Dependencies needed to run the script"
 echo
-center_text "Also, all .apk files come from [apkmirror.com], they are downloaded by myself and uploaded to [pixeldrain.com]"
-center_text "so that the script can download them (because it's impossible to do this simply via [apkmirror.com])."
-echo -e "${GREEN}"
-center_text "Do you want to continue? (Y/n)"
+echo "    Also, all .apk files come from [apkmirror.com], they"
+echo "  are downloaded by myself and uploaded to [pixeldrain.com]"
+echo "       so that the script can download them (because"
+echo "   it's impossible to do this simply via [apkmirror.com])."
+echo -e "${CYAN}"
+echo "             Do you want to continue? (Y/n)"
 echo -e "${NC}"
 
-read -p "$(center_text "Choose an option and press [ENTER] [Y/n]: ")" choice
+read -p " Choose an option and press [ENTER] [Y/n]: " choice
 
 case "$choice" in
     [Yy]*|"")
@@ -60,7 +54,8 @@ source_variables() {
         source "$temp_file"
         echo -e "${GREEN}Variables have been loaded successfully.${NC}"
     else
-        echo -e "${RED}Error while downloading variables.${NC}"
+        echo -e "${RED}Error while downloading variables, please screenshot the error"
+        echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
         exit 1
     fi
 }
@@ -76,7 +71,8 @@ check_openjdk() {
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}OpenJDK 17 successfully installed.${NC}"
         else
-            echo -e "${RED}Error during OpenJDK 17 installation.${NC}"
+            echo -e "${RED}Error during OpenJDK 17 installation, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
     fi
@@ -93,7 +89,8 @@ check_wget() {
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}wget successfully installed.${NC}"
         else
-            echo -e "${RED}Error during wget installation.${NC}"
+            echo -e "${RED}Error during wget installation, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
     fi
@@ -114,7 +111,8 @@ download_direct() {
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}Successful download : $dest_filename${NC}"
         else
-            echo -e "${RED}Error while downloading : $dest_filename${NC}"
+            echo -e "${RED}Error while downloading : $dest_filename, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
     fi
@@ -126,19 +124,25 @@ download_apk() {
     local file_name="$2"
     local download_dir="$3"
 
+    mkdir -p "$download_dir"
+
     if [ -f "$download_dir/$file_name" ]; then
         echo -e "${GREEN}$file_name already exists in $download_dir. No need to download it again.${NC}"
         return 0
     fi
 
     echo -e "${BLUE}Download file from${MAGENTA} $file_url ${BLUE}to $download_dir/$file_name...${NC}"
-    wget -q --show-progress --directory-prefix="$download_dir" "$file_url"
+
+    wget -q --show-progress -O "$download_dir/$file_name" "$file_url"
 
     if [ $? -eq 0 ]; then
-        mv "$download_dir/$(basename "$file_url")" "$download_dir/$file_name"
         echo -e "${GREEN}$file_name has been successfully downloaded to $download_dir${NC}"
     else
         echo -e "${RED}Error downloading file from $file_url${NC}"
+        if [ -f "$download_dir/$(basename "$file_url")" ]; then
+            echo -e "${RED}Partial download detected. Removing incomplete file.${NC}"
+            rm "$download_dir/$(basename "$file_url")"
+        fi
     fi
 }
 
@@ -238,7 +242,9 @@ download_direct "$DL_LINK_PATCHES" "$REVANCED_PATCHES" "$DEST_DIR"
 download_direct "$DL_LINK_INTEGRATIONS" "$REVANCED_INTEGRATIONS" "$DEST_DIR"
 
 # Ask the user what action they want to perform
-echo -e " ${CYAN}What do you want to do?${NC}"
+echo
+echo
+echo -e "${CYAN}> What do you want to do?${NC}"
 echo -e "    ${CYAN}1.${NC} Patch YouTube ${YELLOW}(Stock Logo)${NC} ${MAGENTA}($YOUTUBE_VERSION)${NC}"
 echo -e "    ${CYAN}2.${NC} Patch YouTube ${YELLOW}(ReVanced Logo)${NC} ${MAGENTA}($YOUTUBE_VERSION)${NC}"
 echo -e "    ${CYAN}3.${NC} Patch YouTube Music ${YELLOW}(ARMv8a)${NC} ${MAGENTA}($YOUTUBE_MUSIC_VERSION)${NC}"
@@ -246,9 +252,11 @@ echo -e "    ${CYAN}4.${NC} Patch YouTube Music ${YELLOW}(ARMv7a)${NC} ${MAGENTA
 echo -e "    ${CYAN}5.${NC} Patch TikTok ${MAGENTA}($TIKTOK_VERSION)${NC}"
 echo -e "    ${CYAN}6.${NC} Patch Reddit ${MAGENTA}($REDDIT_VERSION)${NC}"
 echo -e "    ${CYAN}7.${NC} Patch Twitter ${YELLOW}(Android 8+)${NC} ${MAGENTA}($TWITTER_VERSION)${NC}"
+echo
 echo -e "${BLUE}C. Clean CLI files and close script${NC}"
 echo -e "${RED}E. Exit script${NC}"
-read -p "Choose an option and press [ENTER] [1/2/3/4/5/6/7/U/C/E]: " choice
+echo
+read -p " Choose an option and press [ENTER] [1/2/3/4/5/6/7/C/E]: " choice
 
 case $choice in
     1)
@@ -256,7 +264,8 @@ case $choice in
         download_apk "$DL_LINK_YOUTUBE" "$YOUTUBE_NEW_FILENAME" "$APK_DIR/Youtube APK"
 
         if [ ! -f "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" ]; then
-            echo -e "${RED}Error: The file $YOUTUBE_NEW_FILENAME is not present in $APK_DIR/Youtube APK.${NC}"
+            echo -e "${RED}Error: The file $YOUTUBE_NEW_FILENAME is not present in $APK_DIR/Youtube APK. Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -268,7 +277,8 @@ case $choice in
             echo -e "${GREEN}The YouTube application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the Youtube application.${NC}"
+            echo -e "${RED}Error while patching the Youtube application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
@@ -277,7 +287,8 @@ case $choice in
         download_apk "$DL_LINK_YOUTUBE" "$YOUTUBE_NEW_FILENAME" "$APK_DIR/Youtube APK"
 
         if [ ! -f "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" ]; then
-            echo -e "${RED}Error: The file $YOUTUBE_NEW_FILENAME is not present in $APK_DIR/Youtube APK.${NC}"
+            echo -e "${RED}Error: The file $YOUTUBE_NEW_FILENAME is not present in $APK_DIR/Youtube APK. Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -288,7 +299,8 @@ case $choice in
             echo -e "${GREEN}The YouTube application with ReVanced Logo has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the Youtube application.${NC}"
+            echo -e "${RED}Error while patching the Youtube application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
@@ -297,7 +309,8 @@ case $choice in
         download_apk "$DL_LINK_YOUTUBE_MUSIC" "$YOUTUBE_MUSIC_NEW_FILENAME" "$APK_DIR/Youtube Music APK (ARMv8a)"
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" ]; then
-            echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME is not present in $APK_DIR/Youtube Music APK (ARMv8a).${NC}"
+            echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME is not present in $APK_DIR/Youtube Music APK (ARMv8a). Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -308,7 +321,8 @@ case $choice in
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the Youtube Music application.${NC}"
+            echo -e "${RED}Error while patching the Youtube Music application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
@@ -317,7 +331,8 @@ case $choice in
         download_apk "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)"
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" ]; then
-            echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME_V7 is not present in $APK_DIR/Youtube Music APK (ARMv7a).${NC}"
+            echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME_V7 is not present in $APK_DIR/Youtube Music APK (ARMv7a). Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -328,7 +343,8 @@ case $choice in
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the Youtube Music application.${NC}"
+            echo -e "${RED}Error while patching the Youtube Music application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
@@ -337,7 +353,8 @@ case $choice in
         download_apk "$DL_LINK_TIKTOK" "$TIKTOK_NEW_FILENAME" "$APK_DIR/TikTok APK"
 
         if [ ! -f "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" ]; then
-            echo -e "${RED}Error: The file $TIKTOK_NEW_FILENAME is not present in $APK_DIR/TikTok APK.${NC}"
+            echo -e "${RED}Error: The file $TIKTOK_NEW_FILENAME is not present in $APK_DIR/TikTok APK. Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -348,7 +365,8 @@ case $choice in
             echo -e "${GREEN}The TikTok application has been successfully patched in $DEST_DIR/Patched_Apps/TikTok Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the TikTok application.${NC}"
+            echo -e "${RED}Error while patching the TikTok application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
@@ -357,7 +375,8 @@ case $choice in
         download_apk "$DL_LINK_REDDIT" "$REDDIT_NEW_FILENAME" "$APK_DIR/Reddit APK"
 
         if [ ! -f "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" ]; then
-            echo -e "${RED}Error: The $REDDIT_NEW_FILENAME file is not present in $APK_DIR/Reddit APK.${NC}"
+            echo -e "${RED}Error: The $REDDIT_NEW_FILENAME file is not present in $APK_DIR/Reddit APK. Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -368,16 +387,18 @@ case $choice in
             echo -e "${GREEN}The Reddit application has been successfully patched in $DEST_DIR/Patched_Apps/Reddit Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the Reddit application.${NC}"
+            echo -e "${RED}Error while patching the Reddit application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
     7)
-        # Twitter
+        # Twitter (Another shitty app)
         download_apk "$DL_LINK_TWITTER" "$TWITTER_NEW_FILENAME" "$APK_DIR/Twitter APK"
 
         if [ ! -f "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" ]; then
-            echo -e "${RED}Error: The $TWITTER_NEW_FILENAME file is not present in $APK_DIR/Twitter APK.${NC}"
+            echo -e "${RED}Error: The $TWITTER_NEW_FILENAME file is not present in $APK_DIR/Twitter APK. Please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
 
@@ -388,7 +409,8 @@ case $choice in
             echo -e "${GREEN}The Twitter application has been successfully patched in $DEST_DIR/Patched_Apps/Twitter Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the Twitter application.${NC}"
+            echo -e "${RED}Error while patching the Twitter application, please screenshot the error"
+            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
         fi
         ;;
@@ -398,7 +420,8 @@ case $choice in
         rename_apk "$APK_DIR/Universal APK" "$UNIVERSAL_APK"
 
         if [ ! -f "$APK_DIR/Universal APK/$UNIVERSAL_APK" ]; then
-            echo -e "${RED}Error: The $UNIVERSAL_APK file is not present in $APK_DIR/Universal APK.${NC}"
+            echo -e "${RED}Error: The $UNIVERSAL_APK file is not present in $APK_DIR/Universal APK."
+            echo -e "You probably did something wrong, I don't support this function.${NC}"
             exit 1
         fi
 
@@ -409,7 +432,8 @@ case $choice in
             echo -e "${GREEN}The (Universal) application has been successfully patched in $DEST_DIR/Patched_Apps/Universal Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
-            echo -e "${RED}Error while patching the (Universal) application.${NC}"
+            echo -e "${RED}Error while patching the (Universal) application."
+            echo -e "You probably did something wrong, I don't support this function.${NC}"
             exit 1
         fi
         ;;
