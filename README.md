@@ -2,7 +2,7 @@
 
 ### 🚀 Get started
 
-To use the **Auto CLI for Termux** version:
+To use the **Auto CLI for Termux**:
 
 1) Open [Termux](https://termux.dev/en/)
 2) Execute this command:
