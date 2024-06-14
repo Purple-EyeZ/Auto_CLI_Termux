@@ -23,7 +23,7 @@ Once launched, the script will download and install all the prerequisites for us
 
 Once all this is done, the script asks you what action you want to perform:
 - (1-7): Select the app you want to patch, everything is automated
-- Once patched, the destination path appears on the screen. Send the patched apk to your phone and install it.
+- Once patched, the destination path appears on the screen. Open the patched apk in your file explorer and install it.
 
 ---
 ### 👨‍💻 Direct use of CLI
