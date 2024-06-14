@@ -8,7 +8,7 @@ To use the **Auto CLI for Termux**:
 2) Execute this command:
 
     ```
-    bash <(curl -s https://raw.githubusercontent.com/Purple-EyeZ/Auto_CLI_Termux/main/Manual/Auto_CLI_Termux_MANUAL.sh)
+    bash <(curl -s https://raw.githubusercontent.com/Purple-EyeZ/Auto_CLI_Termux/main/Auto_CLI_Termux.sh)
     ```
     
     >ℹ️ *Note: you may need to install “curl” first, using the following command:*
