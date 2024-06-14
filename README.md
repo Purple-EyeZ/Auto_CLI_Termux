@@ -4,7 +4,7 @@
 
 To use the **Auto CLI for Termux**:
 
-1) Open [Termux](https://termux.dev/en/)
+1) Open [Termux](https://termux.dev/en/) (Download directly from GitHub [here](https://github.com/termux/termux-app/releases/download/v0.118.0/termux-app_v0.118.0+github-debug_arm64-v8a.apk))
 2) Execute this command:
 
     ```
