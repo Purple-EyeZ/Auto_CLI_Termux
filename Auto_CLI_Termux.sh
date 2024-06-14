@@ -86,12 +86,12 @@ verify_hash() {
     esac
 
     if [ "$computed_hash" != "$expected_hash" ]; then
-        echo -e "${RED}Error: The $hash_type hash of $file_path does not match the expected hash. Deleting file and restarting script.${NC}"
+        echo -e "${RED}Error: The $hash_type hash of $file_path does not match the expected hash. Deleting file and retrying.${NC}"
         rm -f "$file_path"
-        exec "$0" "$@"
-        exit 1
+        return 1
     else
         echo -e "${GREEN}The $hash_type hash of $file_path matches the expected hash.${NC}"
+        return 0
     fi
 }
 
@@ -380,8 +380,15 @@ case $choice in
         ;;
     4)
         # Youtube_Music_ARMv7
+        while true; do
+
         download_apk "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)"
         verify_hash "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" "4f8473e6421768237c07a3facd20df53" "md5"
+
+        if [ $? -eq 0 ]; then
+            break
+        fi
+    done
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME_V7 is not present in $APK_DIR/Youtube Music APK (ARMv7a). Please screenshot the error"
