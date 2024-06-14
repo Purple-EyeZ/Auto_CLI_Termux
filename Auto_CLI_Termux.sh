@@ -64,33 +64,34 @@ verify_hash() {
     local hash_type="$3"
 
     if [ ! -f "$file_path" ]; then
-        echo -e "${RED}Error: File $file_path not found.${NC}"
+        echo -e "${RED}Error: File $file_path does not exist.${NC}"
         return 1
     fi
 
+    local computed_hash
     case "$hash_type" in
-        "md5")
+        md5)
             computed_hash=$(md5sum "$file_path" | awk '{ print $1 }')
             ;;
-        "sha1")
+        sha1)
             computed_hash=$(sha1sum "$file_path" | awk '{ print $1 }')
             ;;
-        "sha256")
+        sha256)
             computed_hash=$(sha256sum "$file_path" | awk '{ print $1 }')
             ;;
         *)
-            echo -e "${RED}Error: Unsupported hash type $hash_type.${NC}"
+            echo -e "${RED}Error: Unsupported hash type $hash_type. Supported types are: md5, sha1, sha256.${NC}"
             return 1
             ;;
     esac
 
-    if [ "$computed_hash" == "$expected_hash" ]; then
-        echo -e "${GREEN}Success: The $hash_type hash of $file_path matches the expected hash.${NC}"
-        return 0
-    else
+    if [ "$computed_hash" != "$expected_hash" ]; then
         echo -e "${RED}Error: The $hash_type hash of $file_path does not match the expected hash. Deleting file and restarting script.${NC}"
         rm -f "$file_path"
         exec "$0" "$@"
+        exit 1
+    else
+        echo -e "${GREEN}The $hash_type hash of $file_path matches the expected hash.${NC}"
     fi
 }
 
