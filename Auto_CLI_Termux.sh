@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#version 0.36
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -43,6 +45,54 @@ case "$choice" in
         exit 1
         ;;
 esac
+
+# Check hash tools
+check_hash_tools() {
+    for tool in md5sum sha1sum sha256sum; do
+        if ! command -v $tool &> /dev/null; then
+            echo "$tool could not be found. Installing..."
+            pkg install -y coreutils
+            break
+        fi
+    done
+}
+
+# checks file's hash
+verify_hash() {
+    local file_path="$1"
+    local expected_hash="$2"
+    local hash_type="$3"
+
+    if [ ! -f "$file_path" ]; then
+        echo -e "${RED}Error: File $file_path not found.${NC}"
+        return 1
+    fi
+
+    case "$hash_type" in
+        "md5")
+            computed_hash=$(md5sum "$file_path" | awk '{ print $1 }')
+            ;;
+        "sha1")
+            computed_hash=$(sha1sum "$file_path" | awk '{ print $1 }')
+            ;;
+        "sha256")
+            computed_hash=$(sha256sum "$file_path" | awk '{ print $1 }')
+            ;;
+        *)
+            echo -e "${RED}Error: Unsupported hash type $hash_type.${NC}"
+            return 1
+            ;;
+    esac
+
+    if [ "$computed_hash" == "$expected_hash" ]; then
+        echo -e "${GREEN}Success: The $hash_type hash of $file_path matches the expected hash.${NC}"
+        return 0
+    else
+        echo -e "${RED}Error: The $hash_type hash of $file_path does not match the expected hash. Deleting file and restarting script.${NC}"
+        rm -f "$file_path"
+        exec "$0" "$@"
+    fi
+}
 
 # Sources
 source_variables() {
@@ -235,6 +285,7 @@ done
 check_openjdk
 check_wget
 source_variables
+check_hash_tools
 
 # Download files for CLI
 download_direct "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR"
@@ -329,6 +380,7 @@ case $choice in
     4)
         # Youtube_Music_ARMv7
         download_apk "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)"
+        verify_hash "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" "4f8473e6421768237c07a3facd20df53" "md5"
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME_V7 is not present in $APK_DIR/Youtube Music APK (ARMv7a). Please screenshot the error"
