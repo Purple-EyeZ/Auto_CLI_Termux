@@ -24,6 +24,7 @@ Once launched, the script will download and install all the prerequisites for us
 Once all this is done, the script asks you what action you want to perform:
 - (1-7): Select the app you want to patch, everything is automated
 - Once patched, the destination path appears on the screen. Open the patched apk in your file explorer and install it.
+>ℹ️ *Note: If you already have another version of the patched application, you'll need to uninstall it before installing the new one.*
 
 ---
 ### 👨‍💻 Direct use of CLI
