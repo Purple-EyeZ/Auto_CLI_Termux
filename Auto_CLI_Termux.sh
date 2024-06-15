@@ -50,7 +50,7 @@ esac
 echo "y" | termux-setup-storage
 
 check_storage_permissions() {
-    # Vérifiez si le répertoire de stockage externe est accessible
+    # This shit doesn't work every time
     while [ ! -d "/storage/emulated/0" ]; do
         echo -e "${BLUE}Waiting for user to grant storage permissions...${NC}"
         sleep 1
@@ -117,8 +117,7 @@ source_variables() {
         source "$temp_file"
         echo -e "${GREEN}Variables have been loaded successfully.${NC}"
     else
-        echo -e "${RED}Error while downloading variables, please screenshot the error"
-        echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
+        echo -e "${RED}Error while downloading variables. Be sure to grant Termux access to storage${NC}"
         exit 1
     fi
 }
