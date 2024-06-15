@@ -214,8 +214,8 @@ download_and_verify() {
                 echo -e "${GREEN}$file_name already exists in $download_dir and the hash is correct.${NC}"
                 return 0
             else
-                echo -e "${RED}Error: The hash of $file_name does not match the expected hash. Deleting file and retrying download.${NC}"
-                rm "$download_dir/$file_name"
+                echo -e "${RED}Error: The hash of $file_name does not match the expected hash. Deleting file and retrying.${NC}"
+                rm -f "$download_dir/$file_name"
             fi
         fi
 
@@ -229,7 +229,7 @@ download_and_verify() {
                 return 0
             else
                 echo -e "${RED}Error: The downloaded file's hash does not match the expected hash. Deleting file and retrying download.${NC}"
-                rm "$download_dir/$file_name"
+                rm -f "$download_dir/$file_name"
             fi
         else
             echo -e "${RED}Error downloading file from $file_url${NC}"
