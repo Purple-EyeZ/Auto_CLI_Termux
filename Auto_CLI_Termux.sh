@@ -155,9 +155,14 @@ check_openjdk11() {
         pkg update && pkg upgrade -y
 
         # Télécharger et configurer le dépôt alternatif
-        pkg install -y wget
         wget https://its-pointless.github.io/setup-pointless-repo.sh
         bash setup-pointless-repo.sh
+
+        # Vérifier si le dépôt est correctement configuré
+        if ! grep -q "its-pointless" "$PREFIX/etc/apt/sources.list"; then
+            echo -e "${RED}Error: Failed to configure the its-pointless repository.${NC}"
+            exit 1
+        fi
 
         # Installer OpenJDK 11
         pkg install -y openjdk-11
