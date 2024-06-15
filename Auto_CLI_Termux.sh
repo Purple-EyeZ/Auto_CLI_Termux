@@ -49,11 +49,12 @@ esac
 # Check and request storage authorizations
 termux-setup-storage
 
-# Check if storage is accessible
-if [ ! -d "/storage/emulated/0" ]; then
-    echo -e "${RED}Error: External storage is not accessible. Please grant Termux storage permissions.${NC}"
-    exit 1
-fi
+echo -e "${BLUE}Waiting for user to grant storage permissions...${NC}"
+while [ ! -d "/storage/emulated/0" ]; do
+    sleep 1
+done
+
+echo -e "${GREEN}Storage permissions granted. Continuing...${NC}"
 
 # Check hash tools
 check_hash_tools() {
