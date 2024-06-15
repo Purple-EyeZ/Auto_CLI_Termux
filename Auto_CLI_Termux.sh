@@ -49,12 +49,14 @@ esac
 # Check and request storage authorizations
 echo "y" | termux-setup-storage
 
-echo -e "${BLUE}Waiting for user to grant storage permissions...${NC}"
-while [ ! -d "/storage/emulated/0" ]; do
-    sleep 1
-done
-
-echo -e "${GREEN}Storage permissions granted. Continuing...${NC}"
+check_storage_permissions() {
+    # Vérifiez si le répertoire de stockage externe est accessible
+    while [ ! -d "/storage/emulated/0" ]; do
+        echo -e "${BLUE}Waiting for user to grant storage permissions...${NC}"
+        sleep 1
+    done
+    echo -e "${GREEN}Storage permissions granted. Continuing...${NC}"
+}
 
 # Check hash tools
 check_hash_tools() {
@@ -340,6 +342,7 @@ for dir in "Patched_Apps" "APK/Universal APK" "Sources"; do
 done
 
 # Check and install dependencies if necessary
+check_storage_permissions
 check_openjdk
 check_wget
 source_variables
