@@ -219,7 +219,7 @@ download_and_verify() {
             fi
         fi
 
-        echo -e "${BLUE}Download file from${MAGENTA} $file_url ${BLUE}to $download_dir/$file_name...${NC}"
+        echo -e "${BLUE}Downloading file from${MAGENTA} $file_url ${BLUE}to $download_dir/$file_name...${NC}"
         wget -q --show-progress -O "$download_dir/$file_name" "$file_url"
 
         if [ $? -eq 0 ]; then
@@ -232,8 +232,8 @@ download_and_verify() {
                 rm -f "$download_dir/$file_name"
             fi
         else
-            echo -e "${RED}Error downloading file from $file_url${NC}"
-            return 1
+            echo -e "${RED}Error downloading file from $file_url. Retrying...${NC}"
+            rm -f "$download_dir/$file_name"
         fi
     done
 }
