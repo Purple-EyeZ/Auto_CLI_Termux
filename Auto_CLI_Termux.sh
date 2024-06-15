@@ -47,7 +47,7 @@ case "$choice" in
 esac
 
 # Check and request storage authorizations
-termux-setup-storage
+echo "y" | termux-setup-storage
 
 echo -e "${BLUE}Waiting for user to grant storage permissions...${NC}"
 while [ ! -d "/storage/emulated/0" ]; do
