@@ -118,12 +118,11 @@ check_openjdk() {
     else
         echo -e "${BLUE}OpenJDK 17 is not installed. Installation in progress...${NC}"
         pkg update
-        pkg install -y openjdk-17-jdk
+        pkg install -y openjdk-17
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}OpenJDK 17 successfully installed.${NC}"
         else
-            echo -e "${RED}Error during OpenJDK 17 installation, please screenshot the error"
-            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
+            echo -e "${RED}Error during OpenJDK 17 installation, please re-run the script${NC}"
             exit 1
         fi
     fi
