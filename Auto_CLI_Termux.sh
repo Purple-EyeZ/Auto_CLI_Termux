@@ -204,10 +204,12 @@ download_and_verify() {
     local download_dir="$3"
     local expected_hash="$4"
     local hash_type="$5"
+    local max_attempts=5
+    local attempt=1
 
     mkdir -p "$download_dir"
 
-    while true; do
+    while [ $attempt -le $max_attempts ]; do
         if [ -f "$download_dir/$file_name" ]; then
             verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"
             if [ $? -eq 0 ]; then
@@ -232,10 +234,15 @@ download_and_verify() {
                 rm -f "$download_dir/$file_name"
             fi
         else
-            echo -e "${RED}Error downloading file from $file_url. Retrying...${NC}"
+            echo -e "${RED}Error downloading file from $file_url. Retrying... (${attempt}/${max_attempts})${NC}"
             rm -f "$download_dir/$file_name"
         fi
+
+        attempt=$((attempt + 1))
     done
+
+    echo -e "${RED}Error: Failed to download the file after ${max_attempts} attempts. Please check your internet connection or the download link.${NC}"
+    return 1
 }
 
 # Check that the user has correctly placed the .APK file
