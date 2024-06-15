@@ -197,6 +197,47 @@ download_apk() {
     fi
 }
 
+# Download and check hash
+download_and_verify() {
+    local file_url="$1"
+    local file_name="$2"
+    local download_dir="$3"
+    local expected_hash="$4"
+    local hash_type="$5"
+
+    mkdir -p "$download_dir"
+
+    while true; do
+        if [ -f "$download_dir/$file_name" ]; then
+            verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}$file_name already exists in $download_dir and the hash is correct.${NC}"
+                return 0
+            else
+                echo -e "${RED}Error: The hash of $file_name does not match the expected hash. Deleting file and retrying download.${NC}"
+                rm "$download_dir/$file_name"
+            fi
+        fi
+
+        echo -e "${BLUE}Download file from${MAGENTA} $file_url ${BLUE}to $download_dir/$file_name...${NC}"
+        wget -q --show-progress -O "$download_dir/$file_name" "$file_url"
+
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}$file_name has been successfully downloaded to $download_dir${NC}"
+            verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"
+            if [ $? -eq 0 ]; then
+                return 0
+            else
+                echo -e "${RED}Error: The downloaded file's hash does not match the expected hash. Deleting file and retrying download.${NC}"
+                rm "$download_dir/$file_name"
+            fi
+        else
+            echo -e "${RED}Error downloading file from $file_url${NC}"
+            return 1
+        fi
+    done
+}
+
 # Check that the user has correctly placed the .APK file
 check_apk() {
     local apk_dir="$1"
@@ -380,15 +421,7 @@ case $choice in
         ;;
     4)
         # Youtube_Music_ARMv7
-        while true; do
-
-        download_apk "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)"
-        verify_hash "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" "4f8473e6421768237c07a3facd20df53" "md5"
-
-        if [ $? -eq 0 ]; then
-            break
-        fi
-    done
+        download_and_verify "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)" "4f8473e6421768237c07a3facd20df53" "md5"
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME_V7 is not present in $APK_DIR/Youtube Music APK (ARMv7a). Please screenshot the error"
