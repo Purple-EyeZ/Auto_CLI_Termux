@@ -155,14 +155,30 @@ check_openjdk11() {
         pkg update && pkg upgrade -y
 
         # Télécharger et configurer le dépôt alternatif
+        if [ -f setup-pointless-repo.sh ]; then
+            rm setup-pointless-repo.sh
+        fi
+
         wget https://its-pointless.github.io/setup-pointless-repo.sh
         bash setup-pointless-repo.sh
 
-        # Vérifier si le dépôt est correctement configuré
+        # Vérifier le contenu du fichier des sources d'APT
+        if ! grep -q "its-pointless" "$PREFIX/etc/apt/sources.list"; then
+            echo -e "${RED}Error: Failed to configure the its-pointless repository automatically.${NC}"
+            echo -e "${BLUE}Attempting to add the repository manually...${NC}"
+            echo "deb https://its-pointless.github.io/files/21 termux extras" >> "$PREFIX/etc/apt/sources.list"
+        fi
+
+        # Vérifier si le dépôt est correctement configuré après l'ajout manuel
         if ! grep -q "its-pointless" "$PREFIX/etc/apt/sources.list"; then
             echo -e "${RED}Error: Failed to configure the its-pointless repository.${NC}"
             exit 1
+        else
+            echo -e "${GREEN}The its-pointless repository has been successfully configured.${NC}"
         fi
+
+        # Mettre à jour les packages Termux après l'ajout du dépôt
+        pkg update
 
         # Installer OpenJDK 11
         pkg install -y openjdk-11
