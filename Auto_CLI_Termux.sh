@@ -47,7 +47,7 @@ case "$choice" in
 esac
 
 # Check and request storage authorizations
-echo "y" | termux-setup-storage
+#echo "y" | termux-setup-storage
 
 check_storage_permissions() {
     # This shit doesn't work every time
