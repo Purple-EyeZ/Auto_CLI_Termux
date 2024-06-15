@@ -214,7 +214,7 @@ download_and_verify() {
     local download_dir="$3"
     local expected_hash="$4"
     local hash_type="$5"
-    local max_attempts=5
+    local max_attempts=3
     local attempt=1
 
     mkdir -p "$download_dir"
@@ -348,9 +348,11 @@ source_variables
 check_hash_tools
 
 # Download files for CLI
-download_direct "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR"
-download_direct "$DL_LINK_PATCHES" "$REVANCED_PATCHES" "$DEST_DIR"
-download_direct "$DL_LINK_INTEGRATIONS" "$REVANCED_INTEGRATIONS" "$DEST_DIR"
+download_and_verify "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR" "$HASH_CLI" "md5"
+
+download_and_verify "$DL_LINK_PATCHES" "$REVANCED_PATCHES" "$DEST_DIR" "$HASH_PATCHES" "md5"
+
+download_and_verify "$DL_LINK_INTEGRATIONS" "$REVANCED_INTEGRATIONS" "$DEST_DIR" "$HASH_INTEGRATIONS" "md5"
 
 # Ask the user what action they want to perform
 echo
@@ -372,7 +374,7 @@ read -p " Choose an option and press [ENTER] [1/2/3/4/5/6/7/C/E]: " choice
 case $choice in
     1)
         # Youtube Stock logo
-        download_apk "$DL_LINK_YOUTUBE" "$YOUTUBE_NEW_FILENAME" "$APK_DIR/Youtube APK"
+        download_and_verify "$DL_LINK_YOUTUBE" "$YOUTUBE_NEW_FILENAME" "$APK_DIR/Youtube APK" "$HASH_YOUTUBE" "md5"
 
         if [ ! -f "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_NEW_FILENAME is not present in $APK_DIR/Youtube APK. Please screenshot the error"
@@ -395,7 +397,7 @@ case $choice in
         ;;
     2)
         # Youtube Custom branding
-        download_apk "$DL_LINK_YOUTUBE" "$YOUTUBE_NEW_FILENAME" "$APK_DIR/Youtube APK"
+        download_and_verify "$DL_LINK_YOUTUBE" "$YOUTUBE_NEW_FILENAME" "$APK_DIR/Youtube APK" "$HASH_YOUTUBE" "md5"
 
         if [ ! -f "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_NEW_FILENAME is not present in $APK_DIR/Youtube APK. Please screenshot the error"
@@ -417,7 +419,7 @@ case $choice in
         ;;
     3)
         # Youtube_Music_ARMv8
-        download_apk "$DL_LINK_YOUTUBE_MUSIC" "$YOUTUBE_MUSIC_NEW_FILENAME" "$APK_DIR/Youtube Music APK (ARMv8a)"
+        download_and_verify "$DL_LINK_YOUTUBE_MUSIC" "$YOUTUBE_MUSIC_NEW_FILENAME" "$APK_DIR/Youtube Music APK (ARMv8a)" "$HASH_YOUTUBE_MUSIC" "md5"
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME is not present in $APK_DIR/Youtube Music APK (ARMv8a). Please screenshot the error"
@@ -439,7 +441,7 @@ case $choice in
         ;;
     4)
         # Youtube_Music_ARMv7
-        download_and_verify "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)" "4f8473e6421768237c07a3facd20df53" "md5"
+        download_and_verify "$DL_LINK_YOUTUBE_MUSIC_V7" "$YOUTUBE_MUSIC_NEW_FILENAME_V7" "$APK_DIR/Youtube Music APK (ARMv7a)" "$HASH_YOUTUBE_MUSIC_V7" "md5"
 
         if [ ! -f "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME_V7 is not present in $APK_DIR/Youtube Music APK (ARMv7a). Please screenshot the error"
@@ -461,7 +463,7 @@ case $choice in
         ;;
     5)
         # TikTok (Shitty App)
-        download_apk "$DL_LINK_TIKTOK" "$TIKTOK_NEW_FILENAME" "$APK_DIR/TikTok APK"
+        download_and_verify "$DL_LINK_TIKTOK" "$TIKTOK_NEW_FILENAME" "$APK_DIR/TikTok APK" "$HASH_TIKTOK" "md5"
 
         if [ ! -f "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The file $TIKTOK_NEW_FILENAME is not present in $APK_DIR/TikTok APK. Please screenshot the error"
@@ -483,7 +485,7 @@ case $choice in
         ;;
     6)
         # Reddit
-        download_apk "$DL_LINK_REDDIT" "$REDDIT_NEW_FILENAME" "$APK_DIR/Reddit APK"
+        download_and_verify "$DL_LINK_REDDIT" "$REDDIT_NEW_FILENAME" "$APK_DIR/Reddit APK" "$HASH_REDDIT" "md5"
 
         if [ ! -f "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The $REDDIT_NEW_FILENAME file is not present in $APK_DIR/Reddit APK. Please screenshot the error"
@@ -505,7 +507,7 @@ case $choice in
         ;;
     7)
         # Twitter (Another shitty app)
-        download_apk "$DL_LINK_TWITTER" "$TWITTER_NEW_FILENAME" "$APK_DIR/Twitter APK"
+        download_and_verify "$DL_LINK_TWITTER" "$TWITTER_NEW_FILENAME" "$APK_DIR/Twitter APK" "$HASH_TWITTER" "md5"
 
         if [ ! -f "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The $TWITTER_NEW_FILENAME file is not present in $APK_DIR/Twitter APK. Please screenshot the error"
