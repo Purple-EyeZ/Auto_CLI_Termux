@@ -98,7 +98,7 @@ verify_hash() {
 # Sources
 source_variables() {
     local variables_url="https://raw.githubusercontent.com/Purple-EyeZ/Auto_CLI_Linux/main/variables.sh"
-    local temp_file="$DEST_DIR/tmp/variables.sh"
+    local temp_file="$DEST_DIR/Sources/variables.sh"
 
     wget -q -O "$temp_file" "$variables_url"
     if [ $? -eq 0 ]; then
@@ -324,7 +324,7 @@ if [ ! -d "$APK_DIR" ]; then
 fi
 
 # Create folders if they don't exist
-for dir in "Patched_Apps" "APK/Universal APK" "tmp"; do
+for dir in "Patched_Apps" "APK/Universal APK" "Sources"; do
     if [ ! -d "$DEST_DIR/$dir" ]; then
         mkdir -p "$DEST_DIR/$dir"
     fi
