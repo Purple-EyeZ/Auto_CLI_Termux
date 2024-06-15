@@ -139,6 +139,38 @@ check_openjdk() {
     fi
 }
 
+check_openjdk11() {
+    if java -version 2>&1 | grep -q "11"; then
+        echo "OpenJDK 11 is already installed."
+    else
+        echo -e "${BLUE}OpenJDK 11 is not installed. Installation in progress...${NC}"
+
+        # Vérifier si une autre version de Java est installée
+        if java -version 2>&1 | grep -q "version"; then
+            echo -e "${RED}Error: Another version of Java is installed. Please uninstall it before proceeding.${NC}"
+            exit 1
+        fi
+
+        # Mettre à jour les packages Termux
+        pkg update && pkg upgrade -y
+
+        # Télécharger et configurer le dépôt alternatif
+        pkg install -y wget
+        wget https://its-pointless.github.io/setup-pointless-repo.sh
+        bash setup-pointless-repo.sh
+
+        # Installer OpenJDK 11
+        pkg install -y openjdk-11
+
+        if java -version 2>&1 | grep -q "11"; then
+            echo -e "${GREEN}OpenJDK 11 successfully installed.${NC}"
+        else
+            echo -e "${RED}Error during OpenJDK 11 installation, please re-run the script${NC}"
+            exit 1
+        fi
+    fi
+}
+
 # Check if wget is installed
 check_wget() {
     if command -v wget &> /dev/null; then
@@ -341,8 +373,9 @@ for dir in "Patched_Apps" "APK/Universal APK" "Sources"; do
 done
 
 # Check and install dependencies if necessary
-check_storage_permissions
-check_openjdk
+#check_storage_permissions
+check_openjdk11
+#check_openjdk
 check_wget
 source_variables
 check_hash_tools
