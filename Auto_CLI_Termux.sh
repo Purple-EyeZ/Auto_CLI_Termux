@@ -46,6 +46,15 @@ case "$choice" in
         ;;
 esac
 
+# Check and request storage authorizations
+termux-setup-storage
+
+# Check if storage is accessible
+if [ ! -d "/storage/emulated/0" ]; then
+    echo -e "${RED}Error: External storage is not accessible. Please grant Termux storage permissions.${NC}"
+    exit 1
+fi
+
 # Check hash tools
 check_hash_tools() {
     for tool in md5sum sha1sum sha256sum; do
