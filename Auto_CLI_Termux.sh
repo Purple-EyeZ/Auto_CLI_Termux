@@ -122,6 +122,39 @@ source_variables() {
     fi
 }
 
+# Install JDK 11
+install_openjdk11() {
+    local java_archive="$1"
+    local java_dir="$HOME/jdk-11"
+
+    if java -version 2>&1 | grep -q "11"; then
+        echo "OpenJDK 11 is already installed."
+        return
+    fi
+
+    echo "Extracting the JDK archive..."
+    tar -xvzf "$java_archive" -C "$HOME"
+
+    if [ ! -f "$HOME/.bashrc" ]; then
+        echo "Creating .bashrc file..."
+        touch "$HOME/.bashrc"
+    fi
+
+    echo "Configuring environment variables..."
+    echo "export JAVA_HOME=$java_dir" >> ~/.bashrc
+    echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
+
+    echo "Reloading environment variables..."
+    source ~/.bashrc
+
+    echo "Verifying the installation..."
+    if java -version 2>&1 | grep -q "11"; then
+        echo "OpenJDK 11 successfully installed."
+    else
+        echo "Error: OpenJDK 11 installation failed."
+    fi
+}
+
 # Check if OpenJDK 17 is installed
 check_openjdk() {
     if java -version 2>&1 | grep -q "17"; then
@@ -377,8 +410,10 @@ done
 # Check and install dependencies if necessary
 check_storage_permissions
 #check_openjdk11
-check_openjdk
+#check_openjdk
 check_wget
+download_and_verify "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.23%2B9/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz" "OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz" "$HOME/Downloads" "e00476a7be3c4adfa9b3d55d30768967fd246a8352e518894e183fa444d4d3ce" "sha256"
+install_openjdk11 "$HOME/Downloads/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz"
 source_variables
 check_hash_tools
 
