@@ -125,7 +125,7 @@ source_variables() {
 # Install JDK 11
 install_openjdk11() {
     local java_archive="$1"
-    local java_dir="$HOME/jdk-11"
+    local java_dir="$HOME/jdk-11.0.23+9"
 
     if java -version 2>&1 | grep -q "11"; then
         echo "OpenJDK 11 is already installed."
@@ -152,6 +152,7 @@ install_openjdk11() {
         echo "OpenJDK 11 successfully installed."
     else
         echo "Error: OpenJDK 11 installation failed."
+        exit 1
     fi
 }
 
