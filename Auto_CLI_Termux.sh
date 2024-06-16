@@ -356,7 +356,7 @@ clean_destination_dir() {
 }
 
 # Destination directory /storage/emulated/0/Download/Auto_CLI_Termux
-DEST_DIR="/storage/emulated/0/Download/Auto_CLI_Termux"
+DEST_DIR="$HOME/Downloads/Auto_CLI_Linux"
 
 if [ ! -d "$DEST_DIR" ]; then
     mkdir -p "$DEST_DIR"
