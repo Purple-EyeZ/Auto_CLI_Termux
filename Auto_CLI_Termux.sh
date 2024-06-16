@@ -47,7 +47,7 @@ case "$choice" in
 esac
 
 # Check and request storage authorizations
-#echo "y" | termux-setup-storage
+echo "y" | termux-setup-storage
 
 check_storage_permissions() {
     # This shit doesn't work every time
@@ -375,9 +375,9 @@ for dir in "Patched_Apps" "APK/Universal APK" "Sources"; do
 done
 
 # Check and install dependencies if necessary
-#check_storage_permissions
+check_storage_permissions
 #check_openjdk11
-#check_openjdk
+check_openjdk
 check_wget
 source_variables
 check_hash_tools
