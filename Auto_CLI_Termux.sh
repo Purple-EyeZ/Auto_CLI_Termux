@@ -135,17 +135,17 @@ install_openjdk11() {
     echo "Extracting the JDK archive..."
     tar -xvzf "$java_archive" -C "$HOME"
 
-    if [ ! -f "$HOME/.bashrc" ]; then
-        echo "Creating .bashrc file..."
-        touch "$HOME/.bashrc"
+    if [ ! -f "$HOME/.profile" ]; then
+        echo "Creating .profile file..."
+        touch "$HOME/.profile"
     fi
 
     echo "Configuring environment variables..."
-    echo "export JAVA_HOME=$java_dir" >> ~/.bashrc
-    echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
+    echo "export JAVA_HOME=$java_dir" >> ~/.profile
+    echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.profile
 
     echo "Reloading environment variables..."
-    source ~/.bashrc
+    source ~/.profile
 
     echo "Verifying the installation..."
     if java -version 2>&1 | grep -q "11"; then
