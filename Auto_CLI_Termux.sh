@@ -355,7 +355,7 @@ clean_destination_dir() {
     fi
 }
 
-# Destination directory
+# Destination directory /storage/emulated/0/Download/Auto_CLI_Termux
 DEST_DIR="/storage/emulated/0/Download/Auto_CLI_Termux"
 
 if [ ! -d "$DEST_DIR" ]; then
@@ -376,8 +376,8 @@ done
 
 # Check and install dependencies if necessary
 #check_storage_permissions
-check_openjdk11
-#check_openjdk
+#check_openjdk11
+check_openjdk
 check_wget
 source_variables
 check_hash_tools
@@ -485,7 +485,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
