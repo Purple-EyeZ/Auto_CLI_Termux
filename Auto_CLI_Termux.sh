@@ -390,7 +390,7 @@ clean_destination_dir() {
 }
 
 # Destination directory /storage/emulated/0/Download/Auto_CLI_Termux
-DEST_DIR="/storage/emulated/0/Download/Auto_CLI_Termux"
+DEST_DIR="$HOME/Auto_CLI_Termux"
 
 if [ ! -d "$DEST_DIR" ]; then
     mkdir -p "$DEST_DIR"
@@ -418,7 +418,7 @@ check_wget
 source_variables
 check_hash_tools
 download_and_verify "https://github.com/ReVanced/revanced-manager/raw/main/android/app/src/main/jniLibs/arm64-v8a/libaapt2.so" "libaapt2.so" "$DEST_DIR" "5b3b135a019d122d8ac9841388ac9628" "md5"
-chmod +x ./storage/emulated/0/Download/Auto_CLI_Termux/libaapt2.so
+chmod +x $HOME/Auto_CLI_Termux/libaapt2.so
 
 # Download files for CLI
 download_and_verify "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR" "$HASH_CLI" "md5"
