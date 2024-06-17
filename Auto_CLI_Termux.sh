@@ -401,9 +401,12 @@ move_files() {
 
     mkdir -p "$destination_dir"
 
-    mv "$source_dir"/* "$destination_dir"
-
-    echo "Files have been moved from $source_dir to $destination_dir"
+    if ls "$source_dir"/*.apk 1> /dev/null 2>&1; then
+        mv "$source_dir"/*.apk "$destination_dir"
+        echo "Files have been moved from $source_dir to $destination_dir"
+    else
+        echo "No .apk files found in $source_dir"
+    fi
 }
 
 # Destination directory /storage/emulated/0/Download/Auto_CLI_Termux
@@ -474,11 +477,12 @@ case $choice in
 
         # Patch the app
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Youtube Patched/Stock_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Youtube Patched/Stock_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The YouTube application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/Youtube Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the Youtube application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -496,11 +500,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'Custom branding' -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Youtube Patched/Logo_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'Custom branding' -o "$DEST_DIR/Patched_Apps/Youtube Patched/Logo_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The YouTube application with ReVanced Logo has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/Youtube Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the Youtube application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -518,12 +523,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$HOME/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
-            move_files "$HOME/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched"
+            move_files "$DEST_DIR/Patched_Apps/Youtube Music Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the Youtube Music application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -541,11 +546,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/Youtube Music Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the Youtube Music application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -563,11 +569,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'SIM spoof' -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/TikTok Patched/Patched_${TIKTOK_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'SIM spoof' -o "$DEST_DIR/Patched_Apps/TikTok Patched/Patched_${TIKTOK_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The TikTok application has been successfully patched in $DEST_DIR/Patched_Apps/TikTok Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/TikTok Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the TikTok application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -585,11 +592,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Reddit Patched/Patched_${REDDIT_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Reddit Patched/Patched_${REDDIT_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Reddit application has been successfully patched in $DEST_DIR/Patched_Apps/Reddit Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/Reddit Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the Reddit application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -607,11 +615,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Twitter Patched/Patched_${TWITTER_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Twitter Patched/Patched_${TWITTER_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Twitter application has been successfully patched in $DEST_DIR/Patched_Apps/Twitter Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/Twitter Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the Twitter application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
@@ -630,11 +639,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./storage/emulated/0/Download/Auto_CLI_Termux/Patched_Apps/Universal Patched/Patched_${UNIVERSAL_APK}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Universal APK/$UNIVERSAL_APK" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Universal Patched/Patched_${UNIVERSAL_APK}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Universal APK/$UNIVERSAL_APK" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The (Universal) application has been successfully patched in $DEST_DIR/Patched_Apps/Universal Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$DEST_DIR/Patched_Apps/Universal Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
         else
             echo -e "${RED}Error while patching the (Universal) application."
             echo -e "You probably did something wrong, I don't support this function.${NC}"
