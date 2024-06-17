@@ -124,8 +124,7 @@ check_openjdk() {
     else
         echo -e "${BLUE}OpenJDK 17 is not installed. Installation in progress...${NC}"
         export DEBIAN_FRONTEND=noninteractive
-        pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew"
-        pkg install -y openjdk-17 -o Dpkg::Options::="--force-confnew"
+        pkg install -y openjdk-17
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}OpenJDK 17 successfully installed.${NC}"
         else
@@ -137,21 +136,21 @@ check_openjdk() {
 
 # Check if wget is installed
 check_wget() {
-    if command -v wget &> /dev/null; then
-        echo "wget is already installed."
+  if command -v wget &> /dev/null; then
+    echo "wget is already installed."
+  else
+    echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
+    export DEBIAN_FRONTEND=noninteractive
+    pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages
+    pkg install -y wget
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}wget successfully installed.${NC}"
     else
-        echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
-        export DEBIAN_FRONTEND=noninteractive
-        pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew"
-        pkg install -y wget -o Dpkg::Options::="--force-confnew"
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}wget successfully installed.${NC}"
-        else
-            echo -e "${RED}Error during wget installation, please screenshot the error"
-            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
-            exit 1
-        fi
+      echo -e "${RED}Error during wget installation, please screenshot the error"
+      echo -e "and ping me in the #Support channel of the Discord or open an issue on GitHub${NC}"
+      exit 1
     fi
+  fi
 }
 
 # Download and check hash
