@@ -123,7 +123,7 @@ check_openjdk() {
         echo "OpenJDK 17 is already installed."
     else
         echo -e "${BLUE}OpenJDK 17 is not installed. Installation in progress...${NC}"
-        pkg update -y && pkg upgrade -y
+        pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew"
         pkg install -y openjdk-17
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}OpenJDK 17 successfully installed.${NC}"
