@@ -112,7 +112,7 @@ source_variables() {
         source "$temp_file"
         echo -e "${GREEN}Variables have been loaded successfully.${NC}"
     else
-        echo -e "${RED}Error while downloading variables. Be sure to grant Termux access to storage${NC}"
+        echo -e "${RED}Error while downloading variables. Be sure to grant Termux access to storage and re-run the script.${NC}"
         exit 1
     fi
 }
@@ -141,8 +141,9 @@ check_wget() {
         echo "wget is already installed."
     else
         echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
-        pkg update -y
-        pkg install -y wget
+        export DEBIAN_FRONTEND=noninteractive
+        pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew"
+        pkg install -y wget -o Dpkg::Options::="--force-confnew"
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}wget successfully installed.${NC}"
         else
