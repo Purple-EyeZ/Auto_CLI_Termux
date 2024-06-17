@@ -418,6 +418,8 @@ check_wget
 source_variables
 check_hash_tools
 download_and_verify "https://github.com/ReVanced/revanced-manager/raw/main/android/app/src/main/jniLibs/arm64-v8a/libaapt2.so" "libaapt2.so" "$DEST_DIR" "5b3b135a019d122d8ac9841388ac9628" "md5"
+chmod +x $DEST_DIR/libaapt2.so
+sleep 20
 
 # Download files for CLI
 download_and_verify "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR" "$HASH_CLI" "md5"
