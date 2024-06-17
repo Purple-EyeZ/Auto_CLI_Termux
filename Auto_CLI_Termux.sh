@@ -76,7 +76,6 @@ verify_hash() {
     local hash_type="$3"
 
     if [ ! -f "$file_path" ]; then
-        echo -e "${RED}Error: File $file_path does not exist.${NC}"
         return 1
     fi
 
@@ -92,17 +91,13 @@ verify_hash() {
             computed_hash=$(sha256sum "$file_path" | awk '{ print $1 }')
             ;;
         *)
-            echo -e "${RED}Error: Unsupported hash type $hash_type. Supported types are: md5, sha1, sha256.${NC}"
             return 1
             ;;
     esac
 
     if [ "$computed_hash" != "$expected_hash" ]; then
-        echo -e "${RED}Error: The $hash_type hash of $file_path does not match the expected hash. Deleting file and retrying.${NC}"
-        rm -f "$file_path"
         return 1
     else
-        echo -e "${GREEN}The $hash_type hash of $file_path matches the expected hash.${NC}"
         return 0
     fi
 }
@@ -171,8 +166,7 @@ download_and_verify() {
 
     while [ $attempt -le $max_attempts ]; do
         if [ -f "$download_dir/$file_name" ]; then
-            verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"
-            if [ $? -eq 0 ]; then
+            if verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"; then
                 echo -e "${GREEN}$file_name already exists in $download_dir and the hash is correct.${NC}"
                 return 0
             else
@@ -186,8 +180,7 @@ download_and_verify() {
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}$file_name has been successfully downloaded to $download_dir${NC}"
-            verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"
-            if [ $? -eq 0 ]; then
+            if verify_hash "$download_dir/$file_name" "$expected_hash" "$hash_type"; then
                 return 0
             else
                 echo -e "${RED}Error: The downloaded file's hash does not match the expected hash. Deleting file and retrying download.${NC}"
@@ -201,8 +194,7 @@ download_and_verify() {
         attempt=$((attempt + 1))
     done
 
-    echo -e "${RED}Error: Failed to download the file after ${max_attempts} attempts. Please check your internet connection."
-    echo -e "Try changing your DNS or try a VPN to another country.${NC}"
+    echo -e "${RED}Error: Failed to download the file after ${max_attempts} attempts. Please check your internet connection. Try changing your DNS or try a VPN to another country.${NC}"
     return 1
 }
 
