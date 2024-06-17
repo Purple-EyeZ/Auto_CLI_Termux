@@ -411,12 +411,13 @@ done
 # Check and install dependencies if necessary
 check_storage_permissions
 #check_openjdk11
-#check_openjdk
+check_openjdk
 check_wget
-download_and_verify "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.23%2B9/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz" "OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz" "$HOME/Downloads" "e00476a7be3c4adfa9b3d55d30768967fd246a8352e518894e183fa444d4d3ce" "sha256"
-install_openjdk11 "$HOME/Downloads/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz"
+#download_and_verify "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.23%2B9/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz" "OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz" "$HOME/Downloads" "e00476a7be3c4adfa9b3d55d30768967fd246a8352e518894e183fa444d4d3ce" "sha256"
+#install_openjdk11 "$HOME/Downloads/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.23_9.tar.gz"
 source_variables
 check_hash_tools
+download_and_verify "https://github.com/ReVanced/revanced-manager/raw/main/android/app/src/main/jniLibs/arm64-v8a/libaapt2.so" "libaapt2.so" "$DEST_DIR" "5b3b135a019d122d8ac9841388ac9628" "md5"
 
 # Download files for CLI
 download_and_verify "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR" "$HASH_CLI" "md5"
@@ -499,7 +500,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "./Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
