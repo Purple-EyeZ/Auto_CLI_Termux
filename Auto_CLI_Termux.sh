@@ -141,13 +141,14 @@ check_wget() {
   else
     echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
     export DEBIAN_FRONTEND=noninteractive
+    sleep 1
     echo "Y" | pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages
+    sleep 1
     echo "Y" | pkg install -y wget
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}wget successfully installed.${NC}"
     else
-      echo -e "${RED}Error during wget installation, please screenshot the error"
-      echo -e "and ping me in the #Support channel of the Discord or open an issue on GitHub${NC}"
+      echo -e "${RED}Error during wget installation, please re-run the script${NC}"
       exit 1
     fi
   fi
