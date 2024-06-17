@@ -494,7 +494,7 @@ case $choice in
         # Youtube_Music_ARMv8
         download_and_verify "$DL_LINK_YOUTUBE_MUSIC" "$YOUTUBE_MUSIC_NEW_FILENAME" "$APK_DIR/Youtube Music APK (ARMv8a)" "$HASH_YOUTUBE_MUSIC" "md5"
 
-        if [ ! -f "$APK_DIR/Youtube Music APK (ARMv8a)" ]; then
+        if [ ! -f "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" ]; then
             echo -e "${RED}Error: The file $YOUTUBE_MUSIC_NEW_FILENAME is not present in $APK_DIR/Youtube Music APK (ARMv8a). Please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
             exit 1
