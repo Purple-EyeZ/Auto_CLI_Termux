@@ -389,6 +389,23 @@ clean_destination_dir() {
     fi
 }
 
+# Moving files to improve performance
+move_files() {
+    local source_dir="$1"
+    local destination_dir="$2"
+
+    if [ ! -d "$source_dir" ]; then
+        echo "The source directory $source_dir does not exist."
+        return 1
+    fi
+
+    mkdir -p "$destination_dir"
+
+    mv "$source_dir"/* "$destination_dir"
+
+    echo "Files have been moved from $source_dir to $destination_dir"
+}
+
 # Destination directory /storage/emulated/0/Download/Auto_CLI_Termux
 DEST_DIR="$HOME/Auto_CLI_Termux"
 
@@ -501,11 +518,12 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$HOME/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Youtube Music application has been successfully patched in $DEST_DIR/Patched_Apps/Youtube Music Patched."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
+            move_files "$HOME/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps/Youtube Music Patched"
         else
             echo -e "${RED}Error while patching the Youtube Music application, please screenshot the error"
             echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
