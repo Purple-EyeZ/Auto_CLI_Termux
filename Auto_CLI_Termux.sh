@@ -123,8 +123,9 @@ check_openjdk() {
         echo "OpenJDK 17 is already installed."
     else
         echo -e "${BLUE}OpenJDK 17 is not installed. Installation in progress...${NC}"
+        export DEBIAN_FRONTEND=noninteractive
         pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew"
-        pkg install -y openjdk-17
+        pkg install -y openjdk-17 -o Dpkg::Options::="--force-confnew"
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}OpenJDK 17 successfully installed.${NC}"
         else
@@ -313,6 +314,8 @@ check_storage_permissions
 check_openjdk
 check_wget
 check_hash_tools
+# Pause to avoid variable retrieval failure after first wget installation
+sleep 2
 source_variables
 
 # Download files for CLI
