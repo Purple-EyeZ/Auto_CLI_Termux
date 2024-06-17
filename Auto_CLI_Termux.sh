@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#version 0.37
+#version 0.38
 
 # Colors
 RED='\033[0;31m'
@@ -311,11 +311,9 @@ done
 
 # Check and install dependencies if necessary
 check_storage_permissions
-check_openjdk
 check_wget
+check_openjdk
 check_hash_tools
-# Pause to avoid variable retrieval failure after first wget installation
-sleep 2
 source_variables
 
 # Download files for CLI
