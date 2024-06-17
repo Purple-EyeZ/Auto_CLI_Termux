@@ -328,7 +328,7 @@ download_and_verify "$DL_LINK_PATCHES" "$REVANCED_PATCHES" "$DEST_DIR" "$HASH_PA
 
 download_and_verify "$DL_LINK_INTEGRATIONS" "$REVANCED_INTEGRATIONS" "$DEST_DIR" "$HASH_INTEGRATIONS" "md5"
 
-chmod +x $HOME/Auto_CLI_Termux/libaapt2.so
+chmod +x $HOME/storage/downloads/Auto_CLI_Termux/libaapt2.so
 
 # Ask the user what action they want to perform
 echo
