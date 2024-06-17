@@ -141,8 +141,8 @@ check_wget() {
   else
     echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
     export DEBIAN_FRONTEND=noninteractive
-    pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages
-    pkg install -y wget
+    echo "Y" | pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages
+    echo "Y" | pkg install -y wget
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}wget successfully installed.${NC}"
     else
