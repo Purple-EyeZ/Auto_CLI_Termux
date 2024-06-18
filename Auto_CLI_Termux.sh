@@ -242,7 +242,6 @@ complete_wipe() {
     fi
 }
 
-
 # Clean CLI files
 clean_destination_dir() {
     local dest_dir=$1
@@ -264,7 +263,7 @@ clean_destination_dir() {
     fi
 }
 
-# Moving files to improve performance
+# Moving files (Use of a Termux internal directory as an output directory to improve performance)
 move_files() {
     local source_dir="$1"
     local destination_dir="$2"
@@ -296,6 +295,7 @@ if [ ! -d "$APK_DIR" ]; then
     mkdir -p "$APK_DIR"
 fi
 
+# Use of an internal Termux directory to improve performance
 OUTPUT_DIR="$HOME/Auto_CLI_Termux/Patched_Apps"
 if [ ! -d "$OUTPUT_DIR" ]; then
     mkdir -p "$OUTPUT_DIR"
