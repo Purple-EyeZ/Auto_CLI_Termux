@@ -317,7 +317,6 @@ sleep 2
 source_variables
 
 # Download files for CLI
-echo -e "${BLUE}Download libaapt2.so for arm64-v8a${NC}"
 download_and_verify "https://github.com/ReVanced/revanced-manager/raw/main/android/app/src/main/jniLibs/arm64-v8a/libaapt2.so" "libaapt2.so" "$HOME/Auto_CLI_Termux" "5b3b135a019d122d8ac9841388ac9628" "md5"
 
 download_and_verify "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR" "$HASH_CLI" "md5"
