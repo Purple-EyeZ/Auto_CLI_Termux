@@ -141,11 +141,8 @@ check_wget() {
   else
     echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
     export DEBIAN_FRONTEND=noninteractive
-    confirm_choice="Y"
-    sleep 1
-    echo "$confirm_choice" | pkg update -y && pkg upgrade -y --allow-downgrades --allow-change-held-packages
-    sleep 1
-    echo "$confirm_choice" | pkg install -y wget
+    pkg update -y && pkg upgrade -y
+    pkg install -y wget
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}wget successfully installed.${NC}"
     else
@@ -360,7 +357,7 @@ case $choice in
 
         # Patch the app
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Patched/Stock_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Patched/Stock_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The YouTube application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
@@ -383,7 +380,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'Custom branding' -o "$OUTPUT_DIR/Youtube Patched/Logo_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'Custom branding' -o "$OUTPUT_DIR/Youtube Patched/Logo_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The YouTube application with ReVanced Logo has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
@@ -429,7 +426,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Youtube Music application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
@@ -452,7 +449,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'SIM spoof' -o "$OUTPUT_DIR/TikTok Patched/Patched_${TIKTOK_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'SIM spoof' -o "$OUTPUT_DIR/TikTok Patched/Patched_${TIKTOK_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The TikTok application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
@@ -475,7 +472,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Reddit Patched/Patched_${REDDIT_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Reddit Patched/Patched_${REDDIT_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Reddit application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
@@ -498,7 +495,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Twitter Patched/Patched_${TWITTER_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Twitter Patched/Patched_${TWITTER_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The Twitter application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
@@ -522,7 +519,7 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Universal Patched/Patched_${UNIVERSAL_APK}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Universal APK/$UNIVERSAL_APK" --custom-aapt2-binary "./libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Universal Patched/Patched_${UNIVERSAL_APK}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Universal APK/$UNIVERSAL_APK" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}The (Universal) application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
