@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#version 0.37
+#version 0.38
 
 # Colors
 RED='\033[0;31m'
@@ -112,7 +112,7 @@ source_variables() {
         source "$temp_file"
         echo -e "${GREEN}Variables have been loaded successfully.${NC}"
     else
-        echo -e "${RED}Error while downloading variables. Be sure to grant Termux access to storage${NC}"
+        echo -e "${RED}Error while downloading variables. Be sure to grant Termux access to storage and re-run the script.${NC}"
         exit 1
     fi
 }
@@ -123,7 +123,7 @@ check_openjdk() {
         echo "OpenJDK 17 is already installed."
     else
         echo -e "${BLUE}OpenJDK 17 is not installed. Installation in progress...${NC}"
-        pkg update -y && pkg upgrade -y
+        export DEBIAN_FRONTEND=noninteractive
         pkg install -y openjdk-17
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}OpenJDK 17 successfully installed.${NC}"
@@ -136,20 +136,20 @@ check_openjdk() {
 
 # Check if wget is installed
 check_wget() {
-    if command -v wget &> /dev/null; then
-        echo "wget is already installed."
+  if command -v wget &> /dev/null; then
+    echo "wget is already installed."
+  else
+    echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
+    export DEBIAN_FRONTEND=noninteractive
+    pkg update -y && pkg upgrade -y
+    pkg install -y wget
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}wget successfully installed.${NC}"
     else
-        echo -e "${BLUE}wget is not installed. Installation in progress...${NC}"
-        pkg update -y
-        pkg install -y wget
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}wget successfully installed.${NC}"
-        else
-            echo -e "${RED}Error during wget installation, please screenshot the error"
-            echo -e "and ping me (@Arthur777) in the #Support channel of the ReVanced Discord or open an issue on GitHub${NC}"
-            exit 1
-        fi
+      echo -e "${RED}Error during wget installation, please re-run the script${NC}"
+      exit 1
     fi
+  fi
 }
 
 # Download and check hash
@@ -242,7 +242,6 @@ complete_wipe() {
     fi
 }
 
-
 # Clean CLI files
 clean_destination_dir() {
     local dest_dir=$1
@@ -264,7 +263,27 @@ clean_destination_dir() {
     fi
 }
 
-# Destination directory (/storage/emulated/0/Download/Auto_CLI_Termux)
+# Moving files (Use of a Termux internal directory as an output directory to improve performance)
+move_files() {
+    local source_dir="$1"
+    local destination_dir="$2"
+
+    if [ ! -d "$source_dir" ]; then
+        echo "The source directory $source_dir does not exist."
+        return 1
+    fi
+
+    mkdir -p "$destination_dir"
+
+    if ls "$source_dir"/*.apk 1> /dev/null 2>&1; then
+        mv "$source_dir"/*.apk "$destination_dir"
+        echo "Files successfully moved"
+    else
+        echo "No .apk files found in $source_dir"
+    fi
+}
+
+# Destination directory (/storage/emulated/0/Download/Auto_CLI_Termux) ($HOME/storage/downloads/Auto_CLI_Termux) ($HOME/Auto_CLI_Termux)
 DEST_DIR="$HOME/storage/downloads/Auto_CLI_Termux"
 
 if [ ! -d "$DEST_DIR" ]; then
@@ -274,6 +293,12 @@ fi
 APK_DIR="$DEST_DIR/APK"
 if [ ! -d "$APK_DIR" ]; then
     mkdir -p "$APK_DIR"
+fi
+
+# Use of an internal Termux directory to improve performance
+OUTPUT_DIR="$HOME/Auto_CLI_Termux/Patched_Apps"
+if [ ! -d "$OUTPUT_DIR" ]; then
+    mkdir -p "$OUTPUT_DIR"
 fi
 
 # Create folders if they don't exist
@@ -288,10 +313,10 @@ check_storage_permissions
 check_wget
 check_openjdk
 check_hash_tools
+sleep 2
 source_variables
 
 # Download files for CLI
-echo -e "${BLUE}Download/Check libaapt2.so for arm64-v8a${NC}"
 download_and_verify "https://github.com/ReVanced/revanced-manager/raw/main/android/app/src/main/jniLibs/arm64-v8a/libaapt2.so" "libaapt2.so" "$HOME/Auto_CLI_Termux" "5b3b135a019d122d8ac9841388ac9628" "md5"
 
 download_and_verify "$DL_LINK_CLI" "$REVANCED_CLI" "$DEST_DIR" "$HASH_CLI" "md5"
@@ -332,9 +357,10 @@ case $choice in
 
         # Patch the app
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Youtube Patched/Stock_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Patched/Stock_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Youtube Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The YouTube application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -354,9 +380,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'Custom branding' -o "$DEST_DIR/Patched_Apps/Youtube Patched/Logo_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'Custom branding' -o "$OUTPUT_DIR/Youtube Patched/Logo_Patched_${YOUTUBE_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube APK/$YOUTUBE_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Youtube Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The YouTube application with ReVanced Logo has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -376,9 +403,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv8a)/$YOUTUBE_MUSIC_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Youtube Music Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The Youtube Music application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -398,9 +426,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Youtube Music Patched/Patched_${YOUTUBE_MUSIC_NEW_FILENAME_V7}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Youtube Music APK (ARMv7a)/$YOUTUBE_MUSIC_NEW_FILENAME_V7" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Youtube Music Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The Youtube Music application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -420,9 +449,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'SIM spoof' -o "$DEST_DIR/Patched_Apps/TikTok Patched/Patched_${TIKTOK_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -i 'SIM spoof' -o "$OUTPUT_DIR/TikTok Patched/Patched_${TIKTOK_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/TikTok APK/$TIKTOK_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/TikTok Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The TikTok application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -442,9 +472,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Reddit Patched/Patched_${REDDIT_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Reddit Patched/Patched_${REDDIT_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Reddit APK/$REDDIT_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Reddit Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The Reddit application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -464,9 +495,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Twitter Patched/Patched_${TWITTER_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Twitter Patched/Patched_${TWITTER_NEW_FILENAME}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Twitter APK/$TWITTER_NEW_FILENAME" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Twitter Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The Twitter application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
@@ -487,9 +519,10 @@ case $choice in
         fi
 
         cd "$DEST_DIR"
-        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$DEST_DIR/Patched_Apps/Universal Patched/Patched_${UNIVERSAL_APK}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Universal APK/$UNIVERSAL_APK" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
+        java -jar "$REVANCED_CLI" patch -b "$REVANCED_PATCHES" -p -o "$OUTPUT_DIR/Universal Patched/Patched_${UNIVERSAL_APK}" -m "$REVANCED_INTEGRATIONS" "$APK_DIR/Universal APK/$UNIVERSAL_APK" --custom-aapt2-binary "$HOME/Auto_CLI_Termux/libaapt2.so"
 
         if [ $? -eq 0 ]; then
+            move_files "$OUTPUT_DIR/Universal Patched" "$HOME/storage/downloads/Auto_CLI_Termux/Patched_Apps"
             echo -e "${GREEN}The (Universal) application has been successfully patched in ./Internal Storage/Download/Auto_CLI_Termux/Patched_Apps."
             echo -e "  Open the patched apk in your file explorer and install it.${NC}"
         else
